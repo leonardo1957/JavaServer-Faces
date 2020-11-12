@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./index.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:define name="content">
+        <h:form>
+            <p:tabView>
+
+                <p:tab title="Pesquisa">
+                    <p:panel id="basic" header="Pesquisa Fornecedor" style="margin-bottom:20px">
+                        <h:panelGrid columns="3" cellpadding="10">
+                            <p:outputLabel for="nome" value="Nome:"/>
+                            <p:inputText id="nome" value="#{fornecedorC.fornecedor.nome}" required="true" requiredMessage="Campo 'Nome' é obrigatório"/>
+                            <p:commandButton id ="pesquisar" value="Pesquisar" actionListener="#{fornecedorC.pesquisarPorNome()}" update="tabela"/>
+                        </h:panelGrid>
+
+                        <p:dataTable id="tabela" var="fornecedor"  rows="10" value="#{fornecedorC.modelFornecedores}"
+                                     paginator="true" emptyMessage="Nenhum fornecedor foi encontrado"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records"
+                                     rowsPerPageTemplate="5,10,15">
+
+
+                            <p:column headerText="Nome">
+                                <h:outputText value="#{fornecedor.nome}" />
+                            </p:column>
+
+                            <p:column headerText="Email">
+                                <h:outputText value="#{fornecedor.email}" />
+                            </p:column>
+
+                            <p:column headerText="Telefone">
+                                <h:outputText value="#{fornecedor.telefone}" />
+                            </p:column>
+
+                            <p:column headerText="Cadastro">
+                                <h:outputText value="#{fornecedor.dataCadastro}" />
+                            </p:column>
+
+
+
+                        </p:dataTable>
+                    </p:panel>
+                </p:tab>
+
+                <p:tab title="Novo">
+                    <h:panelGrid columns="2" cellpadding="10">
+
+                    </h:panelGrid>
+                </p:tab>
+
+            </p:tabView>
+        </h:form> 
+    </ui:define>
+
+</ui:composition>
