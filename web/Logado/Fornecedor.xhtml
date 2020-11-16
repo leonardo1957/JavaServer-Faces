@@ -7,9 +7,10 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core">
 
     <ui:define name="content">
-        <h:form>
+        <h:form id="form">
+            <p:growl id="mensagem" showDetail="true"/>
+ 
             <p:tabView>
-
                 <p:tab title="Pesquisa">
                     <p:panel id="basic" header="Pesquisa Fornecedor" style="margin-bottom:20px">
                         <h:panelGrid columns="3" cellpadding="10">
@@ -38,12 +39,25 @@
                             </p:column>
 
                             <p:column headerText="Cadastro">
-                                <h:outputText value="#{fornecedor.dataCadastro}" />
+                                <h:outputText value="#{fornecedor.dataCadastro}" />                      
+                            </p:column>
+
+                            <p:column headerText="Ação">
+                                <p:commandButton value="Excluir" actionListener="#{fornecedorC.excluir()}">
+                                    <p:confirm header="Confirmação" message="Deseja Excluir?" icon="pi pi-exclamation-triangle" />
+                                </p:commandButton>
+
                             </p:column>
 
 
 
                         </p:dataTable>
+                  
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+                            <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+                        </p:confirmDialog>  
+
                     </p:panel>
                 </p:tab>
 
