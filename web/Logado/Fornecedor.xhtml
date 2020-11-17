@@ -8,15 +8,20 @@
 
     <ui:define name="content">
         <h:form id="form">
-            <p:growl id="mensagem" showDetail="true"/>
- 
-            <p:tabView>
+
+            <p:tabView activeIndex="#{fornecedorC.numeroAba}">
                 <p:tab title="Pesquisa">
+
+                    <p:messages id="messages" closable="true">
+                        <p:autoUpdate />
+                    </p:messages>
+
                     <p:panel id="basic" header="Pesquisa Fornecedor" style="margin-bottom:20px">
-                        <h:panelGrid columns="3" cellpadding="10">
+
+                        <h:panelGrid  columns="3" cellpadding="10">
                             <p:outputLabel for="nome" value="Nome:"/>
                             <p:inputText id="nome" value="#{fornecedorC.fornecedor.nome}" required="true" requiredMessage="Campo 'Nome' é obrigatório"/>
-                            <p:commandButton id ="pesquisar" value="Pesquisar" actionListener="#{fornecedorC.pesquisarPorNome()}" update="tabela"/>
+                            <p:commandButton id ="pesquisar" value="Pesquisar" actionListener="#{fornecedorC.pesquisarPorNome()}" update="tabela" process="@this nome"/>
                         </h:panelGrid>
 
                         <p:dataTable id="tabela" var="fornecedor"  rows="10" value="#{fornecedorC.modelFornecedores}"
@@ -43,8 +48,13 @@
                             </p:column>
 
                             <p:column headerText="Ação">
-                                <p:commandButton value="Excluir" actionListener="#{fornecedorC.excluir()}">
+                                <p:commandButton icon="pi pi-trash" actionListener="#{fornecedorC.excluir()}" update="@form">
                                     <p:confirm header="Confirmação" message="Deseja Excluir?" icon="pi pi-exclamation-triangle" />
+                                </p:commandButton>
+
+
+                                <p:commandButton icon="pi pi-pencil" actionListener="#{fornecedorC.alterar()}" update="@form" process="@this">
+                                    <p:confirm header="Confirmação" message="Deseja Alterar?" icon="pi pi-exclamation-triangle" />
                                 </p:commandButton>
 
                             </p:column>
@@ -52,7 +62,7 @@
 
 
                         </p:dataTable>
-                  
+
                         <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
                             <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
                             <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times" />
@@ -62,13 +72,34 @@
                 </p:tab>
 
                 <p:tab title="Novo">
-                    <h:panelGrid columns="2" cellpadding="10">
+                    <p:panel header="Cadastro">
+                        <h:panelGrid id="panel_salvar" columns="2" cellpadding="10">
+                          
+                            <h:outputLabel for="fornecedor" value="Nome:" />
+                            <p:inputText id="fornecedor" value="#{fornecedorC.fornecedor.nome}" required="true" requiredMessage="Nome é obrigatório"/>
+                            
+                             <h:outputLabel for="descricao" value="Descricao" />
+                             <p:inputTextarea id="descricao" value="#{fornecedorC.fornecedor.descricao}" cols="23"/>
+                           
+                            
+                             <h:outputLabel for="email" value="Email:" />
+                             <p:inputText id="email" value="#{fornecedorC.fornecedor.email}" required="true" requiredMessage="email é obrigatório"/>
+                            
+                             <h:outputLabel for="telefone" value="Telefone" />
+                             <p:inputMask id="telefone" value="#{fornecedorC.fornecedor.telefone}" mask="(99)9999-9999" required="true" requiredMessage="telefone é obrigatório"/>
 
-                    </h:panelGrid>
-                </p:tab>
+                             <h:outputText value="" />
+                             <h:panelGroup>
+                                 <p:commandButton value="Salvar" actionListener="#{fornecedorC.salvar()}" process="@this panel_salvar" update="@form"/>
+                                 <p:commandButton value="Limpar" />
+                             </h:panelGroup>
+                                
+                        </h:panelGrid>
+                        </p:panel>
 
-            </p:tabView>
-        </h:form> 
-    </ui:define>
+                 </p:tab>
 
-</ui:composition>
+         </p:tabView>
+         </h:form> 
+         </ui:define>
+          </ui:composition>

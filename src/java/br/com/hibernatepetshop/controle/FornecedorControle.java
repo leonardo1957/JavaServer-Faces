@@ -9,6 +9,7 @@ import br.com.hibernatepetshop.dao.FornecedorDao;
 import br.com.hibernatepetshop.dao.FornecedorDaoImpl;
 import br.com.hibernatepetshop.dao.HibernateUtil;
 import br.com.hibernatepetshop.entidade.Fornecedor;
+import java.util.Date;
 import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -16,6 +17,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import static org.primefaces.behavior.confirm.ConfirmBehavior.PropertyKeys.message;
 
@@ -31,6 +33,7 @@ public class FornecedorControle {
     private FornecedorDao fornecedorDao;
     private Session sessao;
     private DataModel <Fornecedor>modelFornecedores;
+    private int numeroAba =0;
 
    // metodo de pesquisa p/ interface grafica
     public void pesquisarPorNome(){
@@ -57,7 +60,9 @@ public class FornecedorControle {
             sessao = HibernateUtil.abrirSessao();
             fornecedorDao = new FornecedorDaoImpl();
             fornecedorDao.remover(fornecedor, sessao);
-            context.addMessage(null, new FacesMessage("Sucesso",  "Excluido com sucesso!") );
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"Excluido com sucesso",  "Excluido com sucesso!") );
+            fornecedor.setNome(null);
+            modelFornecedores = null; //limpar a lista dps da exclusão
         } catch (Exception e) {
             System.out.println("deu ruim ao excluir" + e.getMessage());
         }finally{
@@ -65,7 +70,33 @@ public class FornecedorControle {
         }
             
     }
+    
+    public void alterar(){
+        numeroAba =1;
+        fornecedor = modelFornecedores.getRowData();
+    
+    }
+    
+    public void salvar(){
+        FacesContext context = FacesContext.getCurrentInstance();
+        fornecedorDao = new FornecedorDaoImpl();
+        sessao = HibernateUtil.abrirSessao();
+        try {
+            fornecedor.setDataCadastro(new Date());
+            fornecedorDao.salvarOuAlterar(fornecedor, sessao);
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"Salvo com sucesso",  "Salvo com sucesso!") );
+            fornecedor = new Fornecedor();
+            numeroAba =0;
             
+        } catch (HibernateException e) {
+            System.out.println("deu ruim ao excluir" + e.getMessage());;
+
+        }finally{
+            sessao.close();
+        }
+        
+        
+    }
     
     public Fornecedor getFornecedor() {
         if(fornecedor == null){
@@ -82,7 +113,15 @@ public class FornecedorControle {
     public DataModel getModelFornecedores() {
         return modelFornecedores;
     }
+
+    public int getNumeroAba() {
+        return numeroAba;
+    }
+
+    public void setNumeroAba(int numeroAba) {
+        this.numeroAba = numeroAba;
+    }
     
-     
+  
     
 }
