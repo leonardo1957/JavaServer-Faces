@@ -34,7 +34,7 @@ public class ProdutoDaoImplTest {
         produtoDao = new ProdutoDaoImpl();
     }
     
-   //  @Test
+    //@Test
     public void testSalvar() {
         System.out.println("salvar");
         produto = new Produto(
@@ -79,7 +79,7 @@ public class ProdutoDaoImplTest {
         
     }
      
-    // @Test
+     //@Test
      public void testExcluir() {
         System.out.println("Excluir");
         buscarProdutoBd();

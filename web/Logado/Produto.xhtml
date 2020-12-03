@@ -6,23 +6,29 @@
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core">
 
+
+
     <ui:define name="content">
-        <h:form id="form">
+        <h:form id="form" >
 
-            <p:tabView activeIndex="#{produtoC.numeroAba}">
+
+
+            <p:tabView id="tab_view" activeIndex="#{produtoC.numeroAba}">
+                <p:ajax event="tabChange" listener="#{produtoC.onTabChange}" update="form:tab_view:fornecedor form:tab_view:categoria"/>
                 <p:tab title="Pesquisa">
-
-                    <p:messages id="messages" closable="true">
+                    <p:messages id="messages"  closable="true">
                         <p:autoUpdate />
-                    </p:messages>
-
-                    <p:panel id="basic" header="Pesquisa Produtos" style="margin-bottom:20px">
-
-                        <h:panelGrid  columns="3" cellpadding="10">
-                            <p:outputLabel for="nome" value="Nome:"/>
-                            <p:inputText id="nome" value="#{produtoC.produto.nome}" required="true" requiredMessage="Campo 'Nome' é obrigatório"/>
-                            <p:commandButton id ="pesquisar" value="Pesquisar" actionListener="#{produtoC.pesquisarPorNome()}" update="tabela" process="@this nome"/>
+                    </p:messages> 
+                    <p:panel id="basic" header="Pesquisa Produto"  style="margin-bottom:20px">
+                        <h:panelGrid columns="3" cellpadding="5">
+                            <p:outputLabel for="nome" value="Nome:" />
+                            <p:inputText id="nome" value="#{produtoC.produto.nome}" 
+                                         required="true" requiredMessage="nome é obrigatório!" />
+                            <p:commandButton value="Pesquisar" actionListener="#{produtoC.pesquisarPornome()}" 
+                                             update="tabela" process="@this nome" />
                         </h:panelGrid>
+
+
 
                         <p:dataTable id="tabela" var="produto"  rows="10" value="#{produtoC.modelProdutos}"
                                      paginator="true" emptyMessage="Nenhum produto foi encontrado"
@@ -31,56 +37,145 @@
                                      rowsPerPageTemplate="5,10,15">
 
 
+
                             <p:column headerText="Nome">
                                 <h:outputText value="#{produto.nome}" />
                             </p:column>
 
-                  
-                            
-                            
-                            <p:column headerText="Ação">
-                                <p:commandButton icon="pi pi-trash" actionListener="#{produtoC.excluir()}" update="@form">
-                                    <p:confirm header="Confirmação" message="Deseja Excluir?" icon="pi pi-exclamation-triangle" />
-                                </p:commandButton>
 
 
-                                <p:commandButton icon="pi pi-pencil" actionListener="#{produtoC.alterar()}" update="@form" process="@this">
-                                    <p:confirm header="Confirmação" message="Deseja Alterar?" icon="pi pi-exclamation-triangle" />
-                                </p:commandButton>
-
+                            <p:column headerText="Estoque">
+                                <h:outputText value="#{produto.estoque}" />
                             </p:column>
+
+
+
+                            <p:column headerText="Preço">
+                                <h:outputText value="#{produto.preco}" />
+                            </p:column>
+
+
+
+                            <p:column headerText="Fornecedor">
+                                <h:outputText value="#{produto.fornecedor.nome}" />
+                            </p:column>
+                            
+                            
+                             <p:column headerText="Categoria">
+                                <h:outputText value="#{produto.categoria.nome}" />
+                            </p:column>
+                            
+                           
+
+
+
+                            <p:column headerText="Ação">
+                                <p:commandButton icon="pi pi-trash" actionListener="#{produtoC.excluir()}" update="@form" process="@this" >
+
+
+
+                                    <p:confirm header="Confirmação" message="Deseja realmente excluir?" icon="pi pi-exclamation-triangle" />
+                                </p:commandButton>
+
+
+
+                                <p:commandButton icon="pi pi-pencil" actionListener="#{produtoC.alterar()}"
+                                                 update="@form" process="@this" />
+                            </p:column>
+
 
 
 
                         </p:dataTable>
 
+
+
                         <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
                             <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
                             <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times" />
-                        </p:confirmDialog>  
+                        </p:confirmDialog>
+
+
 
                     </p:panel>
                 </p:tab>
 
+
+
+
                 <p:tab title="Novo">
-                    <p:panel header="Cadastro">
-                        <h:panelGrid id="panel_salvar" columns="2" cellpadding="10">
-                          
-                            <h:outputLabel for="fornecedor" value="Nome:" />
-                            <p:inputText id="produto" value="#{produtoC.produto.nome}" required="true" requiredMessage="Nome é obrigatório"/>
+                    <p:panel id="painel_cad" header="Cadastro">
+                        <h:panelGrid id="panel_salvar" columns="2" cellpadding="5">
+                            <p:outputLabel for="produto" value="Produto:" />
+                            <p:inputText id="produto" value="#{produtoC.produto.nome}"
+                                         required="true" requiredMessage="nome do produto é obrigatório!" />
+
+
+
+                            <p:outputLabel for="estoque" value="Estoque:" />
+                            <p:inputText id="estoque" value="#{produtoC.produto.estoque}" 
+                                         required="true" requiredMessage="estoque é obrigatório!" />
+
+
+
+                            <p:outputLabel for="preco" value="Preco:" />
+                            <p:inputText id="preco" value="#{produtoC.produto.preco}" 
+                                         required="true" requiredMessage="preço é obrigatório!" />
+
+
+
+                            <p:outputLabel for="codigo" value="Código:" />
+                            <p:inputText id="codigo" value="#{produtoC.produto.codigo}" 
+                                         required="true" requiredMessage="código é obrigatório!" />
+
+
+                            <p:outputLabel for="fornecedor" value="Fornecedor" />
+                            <p:selectOneMenu id="fornecedor" value="#{produtoC.fornecedor.id}">
+                                <f:selectItem itemLabel="Escolha um fornecedor" itemValue="" />
+                                <f:selectItems value="#{produtoC.itensFornecedores}" />
+                            </p:selectOneMenu>
                             
-                             <h:outputText value="" />
-                             <h:panelGroup>
-                                 <p:commandButton value="Salvar" actionListener="#{produtoC.salvar()}" process="@this panel_salvar" update="@form"/>
-                                 <p:commandButton value="Limpar" />
-                             </h:panelGroup>
-                                
+                            
+                            <p:outputLabel for="categoria" value="Categoria" />
+                            <p:selectOneMenu id="categoria" value="#{produtoC.categoria.id}">
+                                <f:selectItem itemLabel="Escolha um fornecedor" itemValue="" />
+                                <f:selectItems value="#{produtoC.itensCategoria}" />
+                            </p:selectOneMenu>
+                            
+                           
+                            
+
+                            <p:outputLabel for="descricao" value="Descrição:" />
+                            <p:inputTextarea id="descricao" value="#{produtoC.produto.descricao}"
+                                             cols="25" />
                         </h:panelGrid>
-                        </p:panel>
 
-                 </p:tab>
 
-         </p:tabView>
-         </h:form> 
-         </ui:define>
-          </ui:composition>
+
+                    </p:panel>
+
+
+
+                    <h:panelGrid columns="2">
+                        <p:commandButton value="Salvar" actionListener="#{produtoC.salvar()}"
+                                         process="@this panel_salvar" update="@form" />
+                        <p:commandButton value="Limpar" />
+                    </h:panelGrid>
+
+
+
+                </p:tab>
+
+
+
+            </p:tabView>
+
+
+
+
+        </h:form>
+    </ui:define>
+
+
+
+</ui:composition>

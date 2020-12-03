@@ -28,8 +28,12 @@
                                      paginator="true" emptyMessage="Nenhum fornecedor foi encontrado"
                                      paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                                      currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records"
-                                     rowsPerPageTemplate="5,10,15">
+                                     rowsPerPageTemplate="5,10,15" editable="true">
 
+                            <!--
+                            <p:ajax event="rowEdit" listener="# {fornecedorC.onRowEdit}" update="@form" />
+                            <p:ajax event="rowEditCancel" listener="# {fornecedorC.onRowCancel}" update="@form" />
+                            -->   
 
                             <p:column headerText="Nome">
                                 <h:outputText value="#{fornecedor.nome}" />
@@ -54,7 +58,7 @@
 
 
                                 <p:commandButton icon="pi pi-pencil" actionListener="#{fornecedorC.alterar()}" update="@form" process="@this">
-                                    <p:confirm header="Confirmação" message="Deseja Alterar?" icon="pi pi-exclamation-triangle" />
+
                                 </p:commandButton>
 
                             </p:column>
@@ -74,32 +78,120 @@
                 <p:tab title="Novo">
                     <p:panel header="Cadastro">
                         <h:panelGrid id="panel_salvar" columns="2" cellpadding="10">
-                          
+
                             <h:outputLabel for="fornecedor" value="Nome:" />
                             <p:inputText id="fornecedor" value="#{fornecedorC.fornecedor.nome}" required="true" requiredMessage="Nome é obrigatório"/>
-                            
-                             <h:outputLabel for="descricao" value="Descricao" />
-                             <p:inputTextarea id="descricao" value="#{fornecedorC.fornecedor.descricao}" cols="23"/>
-                           
-                            
-                             <h:outputLabel for="email" value="Email:" />
-                             <p:inputText id="email" value="#{fornecedorC.fornecedor.email}" required="true" requiredMessage="email é obrigatório"/>
-                            
-                             <h:outputLabel for="telefone" value="Telefone" />
-                             <p:inputMask id="telefone" value="#{fornecedorC.fornecedor.telefone}" mask="(99)9999-9999" required="true" requiredMessage="telefone é obrigatório"/>
 
-                             <h:outputText value="" />
-                             <h:panelGroup>
-                                 <p:commandButton value="Salvar" actionListener="#{fornecedorC.salvar()}" process="@this panel_salvar" update="@form"/>
-                                 <p:commandButton value="Limpar" />
-                             </h:panelGroup>
-                                
+                            <h:outputLabel for="descricao" value="Descricao" />
+                            <p:inputTextarea id="descricao" value="#{fornecedorC.fornecedor.descricao}" cols="23"/>
+
+
+                            <h:outputLabel for="email" value="Email:" />
+                            <p:inputText id="email" value="#{fornecedorC.fornecedor.email}" required="true" requiredMessage="email é obrigatório"/>
+
+                            <h:outputLabel for="telefone" value="Telefone" />
+                            <p:inputMask id="telefone" value="#{fornecedorC.fornecedor.telefone}" mask="(99)9999-9999" required="true" requiredMessage="telefone é obrigatório"/>
+
+
                         </h:panelGrid>
-                        </p:panel>
 
-                 </p:tab>
+                        <p:commandButton value="Adicionar Endereço" actionListener="#{fornecedorC.novoEndereco()}" type="button" onclick="PF('dlg2').show();" />
 
-         </p:tabView>
-         </h:form> 
-         </ui:define>
-          </ui:composition>
+
+
+
+                        <p:dataTable id="tabelaEndereco" var="endereco"  rows="10" value="#{fornecedorC.enderecos}"
+                                     paginator="true" emptyMessage="Nenhum fornecedor foi encontrado"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records"
+                                     rowsPerPageTemplate="5,10,15">
+
+
+
+                            <p:column headerText="Rua">
+                                <h:outputText value="#{endereco.logradouro}, #{endereco.numero}" />
+                            </p:column>
+
+                            <p:column headerText="Bairro">
+                                <h:outputText value="#{endereco.bairro}" />
+                            </p:column>
+
+
+                            <p:column headerText="Cidade">
+                                <h:outputText value="#{endereco.cidade}" />                      
+                            </p:column>
+
+                            <p:column headerText="Cep">
+                                <h:outputText value="#{endereco.cep}" />
+                            </p:column>
+
+                            <p:column headerText="Ação">
+                                <p:commandButton icon="pi pi-trash" 
+                                                 actionListener="#{fornecedorC.excluirEndereco(endereco)}" 
+                                                 update="@form"
+                                                 process="@this">
+                                </p:commandButton>
+
+
+                                <p:commandButton value="Alterar"
+                                                 actionListener="#{fornecedorC.carregarEndereco(endereco)}"
+                                                 oncomplete="PF('dlg2').show()"     
+                                                 process="@this"
+                                                 update="@form">    
+                                    
+                            </p:commandButton>
+
+                        </p:column> 
+
+
+
+
+                    </p:dataTable>
+
+                        <p:dialog id="painel_endereco" header="Endereço" widgetVar="dlg2" height="320" width="400">
+                        <h:panelGrid id="grid_endereco" columns="2">
+
+
+                            <p:outputLabel for="lograudoro" value="Logradouro:"/>
+                            <p:inputText id="lograudoro" value="#{fornecedorC.endereco.logradouro}"  />
+
+                            <p:outputLabel for="numero" value="Numero:" />
+                            <p:inputText id="numero" value="#{fornecedorC.endereco.numero}"/>
+
+                            <p:outputLabel for="bairro" value="Bairro:"  />
+                            <p:inputText id="bairro" value="#{fornecedorC.endereco.bairro}"/>
+
+                            <p:outputLabel for="cidade" value="Cidade:"/>
+                            <p:inputText id="cidade" value="#{fornecedorC.endereco.cidade}" />
+
+                            <p:outputLabel for="estado" value="Estado:" />
+                            <p:inputText id="estado" value="#{fornecedorC.endereco.estado}" />
+
+                            <p:outputLabel for="cep" value="CEP:" />
+                            <p:inputMask id="cep" value="#{fornecedorC.endereco.cep}" mask="99999-999"/>
+
+                            <p:outputLabel for="complemento" value="Complemento">
+                                <p:inputTextarea id="complemento" value="#{fornecedorC.endereco.complemento}"/>
+                            </p:outputLabel>
+
+                            <p:commandButton value="Salvar" actionListener="#{fornecedorC.salvarEndereco()}" update="tabelaEndereco" process="@this painel_endereco" onclick="PF('dlg2').hide();"/>
+
+
+                        </h:panelGrid>
+                    </p:dialog> 
+
+                </p:panel>
+
+                <h:panelGrid columns="2"> 
+
+                    <p:commandButton value="Salvar" actionListener="#{fornecedorC.salvar()}" process="@this panel_salvar" update="@form"/>
+                    <p:commandButton value="Limpar" />
+
+                </h:panelGrid>
+
+            </p:tab>
+
+        </p:tabView>
+    </h:form> 
+</ui:define>
+</ui:composition>
