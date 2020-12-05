@@ -28,7 +28,7 @@ public class CategoriaDaoImplTest {
         categoriaDao = new CategoriaDaoImpl();
     }
 
-     @Test
+     // @Test
     public void testSalvar() {
         System.out.println("salvar");
         categoria = new Categoria (null,
@@ -67,7 +67,7 @@ public class CategoriaDaoImplTest {
         fail("The test case is a prototype.");
     }
 
-    //  @Test
+   //  @Test
     public void testPesquisarTodo() {
         System.out.println("pesquisarTodo");
         Session sessao = null;

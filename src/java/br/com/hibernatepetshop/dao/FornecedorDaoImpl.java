@@ -25,7 +25,7 @@ public class FornecedorDaoImpl extends BaseDaoImpl<Fornecedor,Long> implements F
 
     @Override
     public List<Fornecedor> pesquisarPorNome(String nome, Session sessao) throws HibernateException {
-        Query consulta = sessao.createQuery("SELECT DISTINCT (f)FROM Fornecedor f LEFT JOIN FETCH f.enderecos e WHERE nome LIKE :nome");
+        Query consulta = sessao.createQuery("SELECT DISTINCT (f)FROM Fornecedor f JOIN FETCH f.enderecos e WHERE nome LIKE :nome");
         consulta.setParameter("nome", "%" + nome + "%");
         return consulta.list();
     }

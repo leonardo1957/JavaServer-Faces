@@ -25,8 +25,8 @@ public class CategoriaDaoImpl extends BaseDaoImpl<Categoria,Long> implements Cat
 
     @Override
     public List<Categoria> pesquisarPorNome(String nome, Session session) throws HibernateException {
-       Query consulta = session.createQuery("FROM Categoria WHERE nome LIKE :nome");
-        consulta.setParameter("nome", "%" + nome + "%");
+       Query consulta = session.createQuery("FROM Categoria WHERE nome LIKE :nomeHQL");
+        consulta.setParameter("nomeHQL", "%" + nome + "%");
         return consulta.list();
     }
 
