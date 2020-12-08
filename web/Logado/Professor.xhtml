@@ -1,0 +1,215 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./index.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:define name="content">
+        <h:form id="form">
+
+            <p:tabView activeIndex="#{professorC.numeroAba}">
+                <p:tab title="Pesquisa">
+
+                    <p:messages id="messages" closable="true">
+                        <p:autoUpdate />
+                    </p:messages>
+
+                    <p:panel id="basic" header="Pesquisa Professor" style="margin-bottom:20px">
+
+                        <h:panelGrid  columns="3" cellpadding="10">
+                            <p:outputLabel for="nome" value="Nome:"/>
+                            <p:inputText id="nome" value="#{professorC.professor.nome}" required="true" requiredMessage="Campo 'Nome' é obrigatório"/>
+                            <p:commandButton id ="pesquisar" value="Pesquisar" actionListener="#{professorC.pesquisarPorNome()}" update="tabela" process="@this nome"/>
+                        </h:panelGrid>
+
+                        <p:dataTable id="tabela" var="professor"  rows="10" value="#{professorC.modelProfessores}"
+                                     paginator="true" emptyMessage="Nenhum professor foi encontrado"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records"
+                                     rowsPerPageTemplate="5,10,15" editable="true">
+
+   
+
+                            <p:column headerText="Nome">
+                                <h:outputText value="#{professor.nome}" />
+                            </p:column>
+                            
+                             <p:column headerText="CPF">
+                                <h:outputText value="#{professor.cpf}" />
+                            </p:column>
+                            
+                            <p:column headerText="RG">
+                                <h:outputText value="#{professor.rg}" />
+                            </p:column>
+                            
+                            <p:column headerText="email">
+                                <h:outputText value="#{professor.email}" />
+                            </p:column>
+                            
+                            <p:column headerText="Cracha">
+                                <h:outputText value="#{professor.cracha}" />
+                            </p:column>
+                            
+                            <!-- <p:column headerText="Endereco">
+                                <h:outputText value="# {professor.endereco.logradouro}, # {professor.endereco.cidade}, # {professor.endereco.estado}" />
+                            </p:column> -->
+                            
+                        
+                            
+
+                            <p:column headerText="Ação">
+                                <p:commandButton icon="pi pi-trash" actionListener="#{professorC.excluir()}" update="@form">
+                                    <p:confirm header="Confirmação" message="Deseja Excluir?" icon="pi pi-exclamation-triangle" />
+                                </p:commandButton>
+
+
+                                <p:commandButton icon="pi pi-pencil" actionListener="#{professorC.alterar()}" update="@form" process="@this">
+
+                                </p:commandButton>
+
+                            </p:column>
+
+
+
+                        </p:dataTable>
+
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+                            <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+                        </p:confirmDialog>  
+
+                    </p:panel>
+                </p:tab>
+
+                <p:tab title="Novo">
+                    <p:panel header="Cadastro">
+                        <h:panelGrid id="panel_salvar" columns="2" cellpadding="10">
+
+                            <h:outputLabel for="professor" value="Nome:" />
+                            <p:inputText id="professor" value="#{professorC.professor.nome}" required="true" requiredMessage="Nome é obrigatório"/>
+
+                            <h:outputLabel for="cpf" value="CPF" />
+                            <p:inputTextarea id="cpf" value="#{professorC.professor.cpf}" cols="11"/>
+
+
+                            <h:outputLabel for="email" value="Email:" />
+                            <p:inputText id="email" value="#{professorC.professor.email}" required="true" requiredMessage="email é obrigatório"/>
+                            
+                            <h:outputLabel for="rg" value="RG:" />
+                            <p:inputText id="rg" value="#{professorC.professor.rg}" required="true" requiredMessage="rg é obrigatório"/>
+                            
+                             <h:outputLabel for="cracha" value="Cracha:" />
+                            <p:inputText id="cracha" value="#{professorC.professor.cracha}" required="true" requiredMessage="cracha é obrigatório"/>
+                            
+                            <!--
+                            <h:outputLabel for="logradouro" value="Logradouro:" />
+                            <p:inputText id="logradouro" value="# {professorC.professor.endereco.logradouro}" />
+                            
+                            <h:outputLabel for="numeroEndereco" value="Numero:" />
+                            <p:inputText id="numeroEndereco" value="# {professorC.professor.endereco.numero}" />
+                            
+                            <h:outputLabel for="bairroEndereco" value="Bairro:" />
+                            <p:inputText id="bairroEndereco" value="# {professorC.professor.endereco.bairro}" />
+                            
+                            <h:outputLabel for="cidadeEndereco" value="Cidade:" />
+                            <p:inputText id="cidadeEndereco" value="# {professorC.professor.endereco.cidade}" />
+                            
+                            <h:outputLabel for="estadoEndereco" value="Estado:" />
+                            <p:inputText id="estadoEndereco" value="# {professorC.professor.endereco.estado}" />
+                            
+                            <h:outputLabel for="complementoEndereco" value="Complemento:" />
+                            <p:inputText id="complementoEndereco" value="# {professorC.professor.endereco.complemento}" />
+                            
+                                  -->
+
+                        </h:panelGrid>
+
+                        <p:commandButton value="Adicionar Telefone" actionListener="#{professorC.novoTelefone()}" type="button" onclick="PF('dlg2').show();" />
+
+
+
+
+                        <p:dataTable id="tabelaTelefone" var="telefone"  rows="10" value="#{professorC.telefones}"
+                                     paginator="true" emptyMessage="Nenhum telefone foi encontrado"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records"
+                                     rowsPerPageTemplate="5,10,15">
+
+
+
+                            <p:column headerText="Numero">
+                                <h:outputText value="#{telefone.numero}" />
+                            </p:column>
+
+                            <p:column headerText="Tipo">
+                                <h:outputText value="#{telefone.tipo}" />
+                            </p:column>
+
+
+                            <p:column headerText="Operadora">
+                                <h:outputText value="#{telefone.operadora}" />                      
+                            </p:column>
+
+                            
+
+                            <p:column headerText="Ação">
+                                <p:commandButton icon="pi pi-trash" 
+                                                 actionListener="#{professorC.excluirTelefones(telefone)}" 
+                                                 update="@form"
+                                                 process="@this">
+                                </p:commandButton>
+
+
+                                <p:commandButton value="Alterar"
+                                                 actionListener="#{professorC.carregarTelefone(telefone)}"
+                                                 oncomplete="PF('dlg2').show()"     
+                                                 process="@this"
+                                                 update="@form">    
+                                    
+                            </p:commandButton>
+
+                        </p:column> 
+
+
+
+
+                    </p:dataTable>
+
+                        <p:dialog id="painel_telefone" header="Telefone" widgetVar="dlg2" height="320" width="400">
+                        <h:panelGrid id="grid_telefone" columns="2">
+
+
+                            <p:outputLabel for="numero" value="Numero:"/>
+                            <p:inputText id="numero" value="#{professorC.telefone.numero}"  />
+
+                            <p:outputLabel for="tipo" value="Tipo:" />
+                            <p:inputText id="tipo" value="#{professorC.telefone.tipo}"/>
+
+                            <p:outputLabel for="operadora" value="Operadora:"  />
+                            <p:inputText id="operadora" value="#{professorC.telefone.operadora}"/>
+
+
+
+                            <p:commandButton value="Salvar" actionListener="#{professorC.salvarTelefone()}" update="tabelaTelefone" process="@this painel_telefone" onclick="PF('dlg2').hide();"/>
+
+
+                        </h:panelGrid>
+                    </p:dialog> 
+
+                </p:panel>
+
+                <h:panelGrid columns="2"> 
+
+                    <p:commandButton value="Salvar" actionListener="#{professorC.salvar()}" process="@this panel_salvar" update="@form"/>
+                    <p:commandButton value="Limpar" />
+
+                </h:panelGrid>
+
+            </p:tab>
+
+        </p:tabView>
+    </h:form> 
+</ui:define>
+</ui:composition>

@@ -130,7 +130,7 @@ public class ProfessorDaoImplTest {
         return professor;
     }
 
-    @Test
+   // @Test
     public void testPesquisarPorID() {
         System.out.println("pesquisarPorID");
         Long id = null;
